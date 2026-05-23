@@ -104,6 +104,8 @@ async def run_fight(update, context, sender, target, user_id):
     lol = "\U0001F923"
     puke = "\U0001F922\U0001F92E"
     messages = [
+
+        f"created by RACHIT X RUCHIKA",
         f"{target} TERI MAA KA PEROID {blood*10}",
         f"{sender} PAPA ON FIRE {fire*10}",
         f"{sender} fuck by {target} {hot*10}",
@@ -119,16 +121,18 @@ async def run_fight(update, context, sender, target, user_id):
         f"{sender} fuck by {target} {hot*10}",
         f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? {lol*10}",
         f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI {puke}",
+
+        f"created by RACHIT X RUCHIKA",
     ]
 
-    i = 0
+    
     while user_id in active_fights:
     msg = "\n\n\n\n".join(messages)
     try:
         await update.message.reply_text(msg)
     except Exception:
         break
-    await asyncio.sleep(0.05)
+    await asyncio.sleep(0.02)
    
 
 
