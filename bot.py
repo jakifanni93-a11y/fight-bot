@@ -12,7 +12,7 @@ allowed_users = set()
 # Fight wait list: {user_id: target_name}
 waiting_for_sender = {}
 
-# Active fights: {user_id: True} — /stop se band hoga
+# Active fights: {user_id: True}
 active_fights = {}
 
 # =============================================
@@ -125,74 +125,34 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target = waiting_for_sender.pop(user_id)
 
     active_fights[user_id] = True
-    
 
     asyncio.create_task(run_fight(update, context, sender, target, user_id))
 
 
 # =============================================
-# FIGHT MESSAGES — YAHAN APNE MESSAGES DAALO
-# {sender} aur {target} rakho, baaki apna text likho
+# FIGHT MESSAGES
 # =============================================
 
 async def run_fight(update, context, sender, target, user_id):
     messages = [
-        f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
+        f"{target} TERI MAA KA PEROID \U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78\U0001FA78",
 
 
 
-f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
+        f"{sender} PAPA ON FIRE \U0001F525\U0001F525\U0001F525\U0001F525\U0001F525\U0001F525\U0001F525\U0001F525\U0001F525\U0001F525",
 
 
 
-f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
+        f"{sender} fuck by {target} \U0001F975\U0001F975\U0001F975\U0001F975\U0001F975\U0001F975\U0001F975\U0001F975\U0001F975\U0001F975",
 
 
 
-f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
+        f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? \U0001F923\U0001F923\U0001F923\U0001F923\U0001F923\U0001F923\U0001F923\U0001F923\U0001F923\U0001F923",
 
 
 
-f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
-
-
-f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
-
-
-
-f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
-
-
-
-f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
-
-
-
-f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
-
-
-
-f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
-
-
-
-f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
-
-
-
-f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
-
-
-
-f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
-
-
-
-f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
-
-
-
-f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
+       
+        f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI \U0001F922\U0001F92E",
     ]
 
     i = 0
@@ -202,14 +162,8 @@ f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
             await update.message.reply_text(msg)
         except Exception:
             break
-        await asyncio.sleep(0.3)  # ⚡ Speed — 0.5 second gap (kam karo aur fast hoga)
+        await asyncio.sleep(0.3)
         i += 1
-
-    if user_id not in active_fights:
-        try:
-            
-        except Exception:
-            pass
 
 
 # =============================================
