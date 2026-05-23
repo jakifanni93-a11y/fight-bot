@@ -127,12 +127,12 @@ async def run_fight(update, context, sender, target, user_id):
 
     
     while user_id in active_fights:
-    msg = "\n\n\n\n".join(messages)
-    try:
-        await update.message.reply_text(msg)
-    except Exception:
-        break
-    await asyncio.sleep(0.02)
+        msg = "\n\n\n\n".join(messages)
+        try:
+            await update.message.reply_text(msg)
+        except Exception:
+            break
+        await asyncio.sleep(0.02)
    
 
 
