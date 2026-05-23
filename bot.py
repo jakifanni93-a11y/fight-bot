@@ -168,7 +168,7 @@ f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
 
 
 
-f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣"'
+f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
 
 
 
