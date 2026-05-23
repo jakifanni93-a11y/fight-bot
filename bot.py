@@ -137,14 +137,15 @@ async def run_fight(update, context, sender, target, user_id):
     messages = [
        blood = "\U0001FA78"
     fire = "\U0001F525"
+    
     messages = [
         f"{target} TERI MAA KA PEROID {blood*10}",
         f"{sender} PAPA ON FIRE {fire*10}", 
-
-
-
-
     ]
+
+]
+
+    
 
     i = 0
     while user_id in active_fights:
