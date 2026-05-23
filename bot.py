@@ -76,7 +76,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     target = None
     if context.args:
-        target = " ".join(context.args).lstrip("@")
+        target = " ".join(context.args)
     if not target:
         await update.message.reply_text("❌ Use: /fight @TargetName")
         return
