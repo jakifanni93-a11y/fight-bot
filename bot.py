@@ -9,8 +9,11 @@ OWNER_ID = int(os.environ["OWNER_ID"])
 # Allowed users list
 allowed_users = set()
 
-# Fight wait list
+# Fight wait list: {user_id: target_name}
 waiting_for_sender = {}
+
+# Active fights: {user_id: True} — /stop se band hoga
+active_fights = {}
 
 # =============================================
 # OWNER COMMANDS
@@ -65,6 +68,20 @@ async def remove(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 # =============================================
+# STOP COMMAND
+# =============================================
+
+async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+
+    if user_id in active_fights:
+        active_fights.pop(user_id)
+        await update.message.reply_text("🛑 Fight band kar di gayi!")
+    else:
+        await update.message.reply_text("Koi fight chal nahi rahi.")
+
+
+# =============================================
 # FIGHT COMMAND
 # =============================================
 
@@ -73,6 +90,10 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if user_id != OWNER_ID and user_id not in allowed_users:
         await update.message.reply_text("⛔ Tumhe permission nahi hai.")
+        return
+
+    if user_id in active_fights:
+        await update.message.reply_text("⚠️ Pehle /stop karo, fight already chal rahi hai!")
         return
 
     target = None
@@ -103,28 +124,46 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     sender = update.message.text.strip()
     target = waiting_for_sender.pop(user_id)
 
-    await run_fight(update, context, sender, target)
+    active_fights[user_id] = True
+    await update.message.reply_text(f"⚔️ Fight shuru! /stop likhoge tab band hogi.")
+
+    asyncio.create_task(run_fight(update, context, sender, target, user_id))
 
 
 # =============================================
 # FIGHT MESSAGES — YAHAN APNE MESSAGES DAALO
-# Sirf {sender} aur {target} rakho, baaki text apna likho
-# Jitne chahiye utne messages add karo
+# {sender} aur {target} rakho, baaki apna text likho
 # =============================================
 
-async def run_fight(update, context, sender, target):
+async def run_fight(update, context, sender, target, user_id):
     messages = [
         f"⚔️ {sender} ne {target} ko challenge kiya!",
         f"🔥 {sender} ne attack kiya — {target} par 30 damage!",
         f"💥 {target} ne counter kiya — {sender} ghabra gaya!",
         f"🗡️ {sender} ka CRITICAL HIT — {target} par 50 damage!",
         f"🛡️ {target} ne shield lagaya lekin {sender} ne tod diya!",
-        f"💀 GAME OVER! {sender} ne {target} ko defeat kar diya! 🏆",
+        f"💀 {sender} ne {target} ko ek aur baar maara!",
+        f"🔥 {target} ab bhi lad raha hai — {sender} hairan hai!",
+        f"⚡ {sender} ka secret move — {target} par 80 damage!",
+        f"😤 {target} ne last energy lagai — {sender} ko push kiya!",
+        f"🏆 {sender} unbeatable hai — {target} haar maan le!",
     ]
 
-    for msg in messages:
-        await update.message.reply_text(msg)
-        await asyncio.sleep(2)
+    i = 0
+    while user_id in active_fights:
+        msg = messages[i % len(messages)]
+        try:
+            await update.message.reply_text(msg)
+        except Exception:
+            break
+        await asyncio.sleep(0.3)  # ⚡ Speed — 0.5 second gap (kam karo aur fast hoga)
+        i += 1
+
+    if user_id not in active_fights:
+        try:
+            await update.message.reply_text(f"🛑 Fight khatam! {sender} vs {target} — over!")
+        except Exception:
+            pass
 
 
 # =============================================
@@ -137,6 +176,7 @@ def main():
     app.add_handler(CommandHandler("allow", allow))
     app.add_handler(CommandHandler("remove", remove))
     app.add_handler(CommandHandler("fight", fight))
+    app.add_handler(CommandHandler("stop", stop))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
 
     print("✅ Fight Bot chal raha hai...")
