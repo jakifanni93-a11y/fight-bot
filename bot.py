@@ -76,9 +76,9 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if user_id in active_fights:
         active_fights.pop(user_id)
-        await update.message.reply_text("🛑 Fight band kar di gayi!")
+        await update.message.reply_text("🛑 CHUDAI KHATAM")
     else:
-        await update.message.reply_text("Koi fight chal nahi rahi.")
+        await update.message.reply_text("KOI CHUDEGA?.")
 
 
 # =============================================
@@ -89,11 +89,11 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
 
     if user_id != OWNER_ID and user_id not in allowed_users:
-        await update.message.reply_text("⛔ Tumhe permission nahi hai.")
+        await update.message.reply_text("⛔NIKAL PERMISSION LEKE AA PAHLE ")
         return
 
     if user_id in active_fights:
-        await update.message.reply_text("⚠️ Pehle /stop karo, fight already chal rahi hai!")
+        await update.message.reply_text("⚠️ PAHLE STOP O KAR BKL!")
         return
 
     target = None
@@ -106,7 +106,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     waiting_for_sender[user_id] = target
     await update.message.reply_text(
-        f"⚔️ Target: *{target}*\n\nAb apna naam bhejo:",
+        f"⚔️ Target: *{target}*\n\n NAME BOL JALDI SE :",
         parse_mode="Markdown"
     )
 
@@ -125,7 +125,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target = waiting_for_sender.pop(user_id)
 
     active_fights[user_id] = True
-    await update.message.reply_text(f"⚔️ Fight shuru! /stop likhoge tab band hogi.")
+    
 
     asyncio.create_task(run_fight(update, context, sender, target, user_id))
 
@@ -137,16 +137,62 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def run_fight(update, context, sender, target, user_id):
     messages = [
-        f"⚔️ {sender} ne {target} ko challenge kiya!",
-        f"🔥 {sender} ne attack kiya — {target} par 30 damage!",
-        f"💥 {target} ne counter kiya — {sender} ghabra gaya!",
-        f"🗡️ {sender} ka CRITICAL HIT — {target} par 50 damage!",
-        f"🛡️ {target} ne shield lagaya lekin {sender} ne tod diya!",
-        f"💀 {sender} ne {target} ko ek aur baar maara!",
-        f"🔥 {target} ab bhi lad raha hai — {sender} hairan hai!",
-        f"⚡ {sender} ka secret move — {target} par 80 damage!",
-        f"😤 {target} ne last energy lagai — {sender} ko push kiya!",
-        f"🏆 {sender} unbeatable hai — {target} haar maan le!",
+        {target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
+
+
+
+{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+
+
+
+{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+
+
+
+{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+
+
+
+{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
+
+
+{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
+
+
+
+{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+
+
+
+{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+
+
+
+{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+
+
+
+{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
+
+
+
+{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
+
+
+
+{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+
+
+
+{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+
+
+
+{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+
+
+
+{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
     ]
 
     i = 0
@@ -161,7 +207,7 @@ async def run_fight(update, context, sender, target, user_id):
 
     if user_id not in active_fights:
         try:
-            await update.message.reply_text(f"🛑 Fight khatam! {sender} vs {target} — over!")
+            
         except Exception:
             pass
 
