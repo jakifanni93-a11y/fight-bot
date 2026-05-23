@@ -100,9 +100,25 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def run_fight(update, context, sender, target, user_id):
     blood = "\U0001FA78"
     fire = "\U0001F525"
+    hot = "\U0001F975"
+    lol = "\U0001F923"
+    puke = "\U0001F922\U0001F92E"
     messages = [
         f"{target} TERI MAA KA PEROID {blood*10}",
         f"{sender} PAPA ON FIRE {fire*10}",
+        f"{sender} fuck by {target} {hot*10}",
+        f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? {lol*10}",
+        f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI {puke}",
+        f"{target} TERI MAA KA PEROID {blood*10}",
+        f"{sender} PAPA ON FIRE {fire*10}",
+        f"{sender} fuck by {target} {hot*10}",
+        f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? {lol*10}",
+        f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI {puke}",
+        f"{target} TERI MAA KA PEROID {blood*10}",
+        f"{sender} PAPA ON FIRE {fire*10}",
+        f"{sender} fuck by {target} {hot*10}",
+        f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? {lol*10}",
+        f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI {puke}",
     ]
 
     i = 0
