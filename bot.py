@@ -72,7 +72,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("\u26D4NIKAL PERMISSION LEKE AA PAHLE ")
         return
     if user_id in active_fights:
-        await update.message.reply_text("\u26A0\uFE0F PAHLE STOP O KAR BKL!")
+        await update.message.reply_text("\u26A0\uFE0F PAHLE STOP TO KAR BKL!")
         return
     target = None
     if context.args:
@@ -128,7 +128,7 @@ async def run_fight(update, context, sender, target, user_id):
             await update.message.reply_text(msg)
         except Exception:
             break
-        await asyncio.sleep(0.3)
+        await asyncio.sleep(0.04)
         i += 1
 
 
