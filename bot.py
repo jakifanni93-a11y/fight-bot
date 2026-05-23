@@ -135,11 +135,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def run_fight(update, context, sender, target, user_id):
     messages = [
-        f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
-
-
-
-f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
+       blood = "\U0001FA78"
+    fire = "\U0001F525"
+    messages = [
+        f"{target} TERI MAA KA PEROID {blood*10}",
+        f"{sender} PAPA ON FIRE {fire*10}", 
 
 
 
