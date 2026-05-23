@@ -15,17 +15,11 @@ waiting_for_sender = {}
 # Active fights: {user_id: True}
 active_fights = {}
 
-# =============================================
-# OWNER COMMANDS
-# =============================================
-
 async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-
     user_id = None
     name = None
-
     if update.message.reply_to_message:
         user_id = update.message.reply_to_message.from_user.id
         name = update.message.reply_to_message.from_user.first_name
@@ -35,7 +29,6 @@ async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 user_id = entity.user.id
                 name = entity.user.first_name
                 break
-
     if user_id:
         allowed_users.add(user_id)
         await update.message.reply_text(f"✅ {name} ko permission de di gayi!")
@@ -46,10 +39,8 @@ async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def remove(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
-
     user_id = None
     name = None
-
     if update.message.reply_to_message:
         user_id = update.message.reply_to_message.from_user.id
         name = update.message.reply_to_message.from_user.first_name
@@ -59,7 +50,6 @@ async def remove(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 user_id = entity.user.id
                 name = entity.user.first_name
                 break
-
     if user_id and user_id in allowed_users:
         allowed_users.remove(user_id)
         await update.message.reply_text(f"❌ {name} ki permission hata di!")
@@ -67,85 +57,53 @@ async def remove(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Ye user allowed nahi tha.")
 
 
-# =============================================
-# STOP COMMAND
-# =============================================
-
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-
     if user_id in active_fights:
         active_fights.pop(user_id)
-        await update.message.reply_text("🛑 CHUDAI KHATAM")
+        await update.message.reply_text("\U0001F6D1 CHUDAI KHATAM")
     else:
         await update.message.reply_text("KOI CHUDEGA?.")
 
 
-# =============================================
-# FIGHT COMMAND
-# =============================================
-
 async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-
     if user_id != OWNER_ID and user_id not in allowed_users:
-        await update.message.reply_text("⛔NIKAL PERMISSION LEKE AA PAHLE ")
+        await update.message.reply_text("\u26D4NIKAL PERMISSION LEKE AA PAHLE ")
         return
-
     if user_id in active_fights:
-        await update.message.reply_text("⚠️ PAHLE STOP O KAR BKL!")
+        await update.message.reply_text("\u26A0\uFE0F PAHLE STOP O KAR BKL!")
         return
-
     target = None
     if context.args:
         target = " ".join(context.args).lstrip("@")
-
     if not target:
         await update.message.reply_text("❌ Use: /fight @TargetName")
         return
-
     waiting_for_sender[user_id] = target
     await update.message.reply_text(
-        f"⚔️ Target: *{target}*\n\n NAME BOL JALDI SE :",
+        f"\u2694\uFE0F Target: *{target}*\n\n NAME BOL JALDI SE :",
         parse_mode="Markdown"
     )
 
 
-# =============================================
-# SENDER NAAM LENA
-# =============================================
-
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
-
     if user_id not in waiting_for_sender:
         return
-
     sender = update.message.text.strip()
     target = waiting_for_sender.pop(user_id)
-
     active_fights[user_id] = True
-
     asyncio.create_task(run_fight(update, context, sender, target, user_id))
 
 
-# =============================================
-# FIGHT MESSAGES
-# =============================================
-
 async def run_fight(update, context, sender, target, user_id):
-    messages = [
-       blood = "\U0001FA78"
+    blood = "\U0001FA78"
     fire = "\U0001F525"
-    
     messages = [
         f"{target} TERI MAA KA PEROID {blood*10}",
-        f"{sender} PAPA ON FIRE {fire*10}", 
+        f"{sender} PAPA ON FIRE {fire*10}",
     ]
-
-]
-
-    
 
     i = 0
     while user_id in active_fights:
@@ -158,19 +116,13 @@ async def run_fight(update, context, sender, target, user_id):
         i += 1
 
 
-# =============================================
-# MAIN
-# =============================================
-
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
-
     app.add_handler(CommandHandler("allow", allow))
     app.add_handler(CommandHandler("remove", remove))
     app.add_handler(CommandHandler("fight", fight))
     app.add_handler(CommandHandler("stop", stop))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message))
-
     print("✅ Fight Bot chal raha hai...")
     app.run_polling()
 
