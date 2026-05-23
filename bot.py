@@ -137,62 +137,62 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def run_fight(update, context, sender, target, user_id):
     messages = [
-        {target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
+        f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
 
 
 
-{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
 
 
 
-{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
 
 
 
-{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
 
 
 
-{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
+f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
 
 
-{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
-
-
-
-{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
 
 
 
-{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
 
 
 
-{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
 
 
 
-{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
+f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣"'
 
 
 
-{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸
+f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
 
 
 
-{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥 
+f"{target} TERI MAA KA PEROID 🩸🩸🩸🩸🩸🩸🩸🩸🩸🩸",
 
 
 
-{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵
+f"{sender} PAPA ON FIRE 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥", 
 
 
 
-{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣
+f"{sender} fuck by {target} 🥵🥵🥵🥵🥵🥵🥵🥵🥵🥵",
 
 
 
-{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮
+f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU? 🤣🤣🤣🤣🤣🤣🤣🤣🤣🤣",
+
+
+
+f"{target} TERI MAA KI CHUT SE BADBU ARHI HE CHUT KESE MARU USKI 🤢🤮",
     ]
 
     i = 0
