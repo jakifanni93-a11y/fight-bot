@@ -3,8 +3,8 @@ import os
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
 
-BOT_TOKEN = os.environ["8307295317:AAF_mH-HrA0yr-q-SNGZHrgooTgUNt2zSBM"]
-OWNER_ID = int(os.environ["8588629743"])
+BOT_TOKEN = os.environ["BOT_TOKEN"]
+OWNER_ID = int(os.environ["OWNER_ID"])
 
 # Allowed users list
 allowed_users = set()
