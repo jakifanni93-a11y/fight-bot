@@ -10,9 +10,9 @@ allowed_users = set()
 user_log = {}
 waiting_for_sender = {}
 waiting_for_custom = {}
-waiting_for_custom_name = {}  # {user_id: (sender, target, group_chat_id)}
+waiting_for_custom_name = {}
 active_fights = {}
-fight_count = {}  # {user_id: count}
+fight_count = {}
 MAX_FIGHTS = 5
 fight_data = {}
 
@@ -81,8 +81,16 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     is_private = update.effective_chat.type == "private"
 
     if user_id != OWNER_ID and user_id not in allowed_users:
+        if fight_count.get(user_id, 0) >= MAX_FIGHTS:
+            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
+            return
+    elif user_id != OWNER_ID and user_id in allowed_users:
+        pass
+
+    if user_id != OWNER_ID and user_id not in allowed_users and fight_count.get(user_id, 0) >= MAX_FIGHTS:
         await update.message.reply_text("\u26D4 NIKAL PERMISSION LEKE AA PAHLE @ruchika_owns")
         return
+
     if user_id in active_fights:
         await update.message.reply_text("\u26A0\uFE0F PAHLE STOP TO KAR BKL!")
         return
@@ -97,12 +105,14 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not is_private:
         user_log[user_id] = chat_id
         if user_id != OWNER_ID:
-    if fight_count.get(user_id, 0) >= MAX_FIGHTS:
-        allowed_users.discard(user_id)
-        fight_count.pop(user_id, None)
-        await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
-        return
-    fight_count[user_id] = fight_count.get(user_id, 0) + 1
+            count = fight_count.get(user_id, 0)
+            if count >= MAX_FIGHTS:
+                allowed_users.discard(user_id)
+                fight_count.pop(user_id, None)
+                await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
+                return
+            fight_count[user_id] = count + 1
+
         waiting_for_sender[user_id] = (target, chat_id, update.message.message_id)
         bot_username = (await context.bot.get_me()).username
         keyboard = [[InlineKeyboardButton(
@@ -140,7 +150,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     is_private = update.effective_chat.type == "private"
 
-    # Custom text spam wait
     if user_id in waiting_for_custom:
         sender, target, group_chat_id = waiting_for_custom.pop(user_id)
         custom_text = update.message.text.strip()
@@ -149,7 +158,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         asyncio.create_task(run_custom_fight(context, custom_text, user_id, group_chat_id))
         return
 
-    # Custom name change wait
     if user_id in waiting_for_custom_name:
         sender, target, group_chat_id = waiting_for_custom_name.pop(user_id)
         custom_names_text = update.message.text.strip()
@@ -174,7 +182,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     target, group_chat_id, _ = waiting_for_sender.pop(user_id)
     fight_data[user_id] = (sender, target, group_chat_id)
 
-    # MAIN MENU — 3 options
     keyboard = [
         [InlineKeyboardButton("1\uFE0F\u20E3 CHAT SPAM", callback_data=f"mainmenu_chat|{user_id}")],
         [InlineKeyboardButton("2\uFE0F\u20E3 NAME CHANGE SPAM", callback_data=f"mainmenu_name|{user_id}")],
@@ -200,7 +207,6 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     sender, target, group_chat_id = fight_data[user_id]
 
-    # MAIN MENU HANDLE
     if action == "mainmenu_chat":
         keyboard = [
             [InlineKeyboardButton("1\uFE0F\u20E3 SHORT TEXT FIGHT", callback_data=f"short|{user_id}")],
@@ -210,7 +216,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("5\uFE0F\u20E3 ROAST - AAJA", callback_data=f"roast|{user_id}")],
         ]
         await query.edit_message_text(
-            f"\U0001F4AC CHAT SPAM MODE\n\nKaunsa type chahiye?",
+            "\U0001F4AC CHAT SPAM MODE\n\nKaunsa type chahiye?",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
@@ -221,7 +227,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("2\uFE0F\u20E3 KHUD DEGA NAMES", callback_data=f"namecustom|{user_id}")],
         ]
         await query.edit_message_text(
-            f"\U0001F4DD NAME CHANGE MODE\n\nKaunsa type chahiye?",
+            "\U0001F4DD NAME CHANGE MODE\n\nKaunsa type chahiye?",
             reply_markup=InlineKeyboardMarkup(keyboard)
         )
         return
@@ -230,36 +236,30 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text("STICKERS ABHI COMING SOON! \U0001F6A7")
         return
 
-    # NAME CHANGE
     if action == "nameauto":
         active_fights[user_id] = True
         await query.edit_message_text("\U0001F525 NAME CHANGE SHURU! /stop se band karo.")
         names = [
-            f"{target} TERI MAA KA PEROID{blood*10}",
-            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?  {lol*10}",
-            f"{sender} fuck by {target} {hot*10}",
-            f"{target} TERI MAA KA PEROID {blood*10}",
-            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?  {lol*10}",
-            f"{sender} fuck by {target} {hot*10}",
+            f"{target} TERI MAA KA PEROID",
+            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?",
+            f"{target} TERI MAA KA PEROID",
+            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?",
         ]
         asyncio.create_task(run_name_change(context, names, user_id, group_chat_id))
         return
 
     if action == "namecustom":
         waiting_for_custom_name[user_id] = (sender, target, group_chat_id)
-        await query.edit_message_text(
-            "\u270D\uFE0F NEW NAMES BHEJ JALDI JALDI"
-        )
+        await query.edit_message_text("\u270D\uFE0F NEW NAMES BHEJ JALDI JALDI")
         return
 
-    # CHAT SPAM
     if action == "custom":
         waiting_for_custom[user_id] = (sender, target, group_chat_id)
         await query.edit_message_text("\u270D\uFE0F TEXT BHEJ JALDI JALDI:")
         return
 
     active_fights[user_id] = True
-    await query.edit_message_text(f"\U0001F525 GROUP DEKH JAKE!")
+    await query.edit_message_text("\U0001F525 GROUP DEKH JAKE!")
     asyncio.create_task(run_fight(context, sender, target, user_id, action, group_chat_id))
 
 async def run_fight(context, sender, target, user_id, spam_type, group_chat_id):
@@ -363,13 +363,13 @@ async def run_custom_fight(context, custom_text, user_id, group_chat_id):
             await context.bot.send_message(chat_id=group_chat_id, text=custom_text)
         except Exception:
             pass
-        await asyncio.sleep(0.01)
+        await asyncio.sleep(0.02)
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     if user_id in waiting_for_sender or user_id in waiting_for_custom or user_id in waiting_for_custom_name:
         return
-    await update.message.reply_text("JA @ruchika_owns SE PERMISSION LEKE AA")
+    await update.message.reply_text("OWNER SE BAT KAR KE AA @ruchika_owns")
 
 def main():
     app = Application.builder().token(BOT_TOKEN).build()
