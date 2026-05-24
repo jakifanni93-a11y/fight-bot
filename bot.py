@@ -74,6 +74,8 @@ async def logs(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
+    if user_id != OWNER_ID and user_id not in allowed_users:
+        return
     if user_id in active_fights:
         active_fights.pop(user_id)
         await update.message.reply_text("\U0001F6D1 CHUDAI KHATAM!!!!! KHUSH HO JA CHUDAI KHATAM KAR DI TUNE")
@@ -170,8 +172,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     # Sirf private mein naam lo
     if not is_private:
-        if user_id not in waiting_for_sender:
-            await update.message.reply_text("DM KAR BKL \U0001F4AC PEHLE /fight @target likh")
         return
 
     if user_id not in waiting_for_sender:
