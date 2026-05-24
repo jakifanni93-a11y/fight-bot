@@ -12,6 +12,8 @@ waiting_for_sender = {}
 waiting_for_custom = {}
 waiting_for_custom_name = {}  # {user_id: (sender, target, group_chat_id)}
 active_fights = {}
+fight_count = {}  # {user_id: count}
+MAX_FIGHTS = 5
 fight_data = {}
 
 async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -94,6 +96,13 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if not is_private:
         user_log[user_id] = chat_id
+        if user_id != OWNER_ID:
+    if fight_count.get(user_id, 0) >= MAX_FIGHTS:
+        allowed_users.discard(user_id)
+        fight_count.pop(user_id, None)
+        await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
+        return
+    fight_count[user_id] = fight_count.get(user_id, 0) + 1
         waiting_for_sender[user_id] = (target, chat_id, update.message.message_id)
         bot_username = (await context.bot.get_me()).username
         keyboard = [[InlineKeyboardButton(
@@ -226,10 +235,12 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         active_fights[user_id] = True
         await query.edit_message_text("\U0001F525 NAME CHANGE SHURU! /stop se band karo.")
         names = [
-            f"{target} TERI MAA KA PEROID",
-            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?",
-            f"{target} TERI MAA KA PEROID",
-            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?",
+            f"{target} TERI MAA KA PEROID{blood*10}",
+            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?  {lol*10}",
+            f"{sender} fuck by {target} {hot*10}",
+            f"{target} TERI MAA KA PEROID {blood*10}",
+            f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?  {lol*10}",
+            f"{sender} fuck by {target} {hot*10}",
         ]
         asyncio.create_task(run_name_change(context, names, user_id, group_chat_id))
         return
@@ -237,7 +248,7 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if action == "namecustom":
         waiting_for_custom_name[user_id] = (sender, target, group_chat_id)
         await query.edit_message_text(
-            "\u270D\uFE0F Apne names bhejo — HAR LINE PE EK NAAM:\n\nExample:\nRAHUL PAGAL HAI\nRAHUL BHAAG\nRAHUL CHHOD DE"
+            "\u270D\uFE0F NEW NAMES BHEJ JALDI JALDI"
         )
         return
 
