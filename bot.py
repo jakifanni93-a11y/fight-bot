@@ -16,6 +16,63 @@ fight_count = {}
 MAX_FIGHTS = 5
 fight_data = {}
 
+async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    user_id = update.effective_user.id
+    is_private = update.effective_chat.type == "private"
+    if not is_private:
+        return
+
+    if user_id in waiting_for_sender:
+        target, group_chat_id, _ = waiting_for_sender[user_id]
+        await update.message.reply_text(
+            f"\u2694\uFE0F Target: *{target}*\n\nNAME BOL JALDI SE APNA:",
+            parse_mode="Markdown"
+        )
+        return
+
+    welcome = (
+        "\U0001F480\u2694\uFE0F *FIGHT BOT — BY RACHIT X RUCHIKA* \u2694\uFE0F\U0001F480\n"
+        "\n"
+        "━━━━━━━━━━━━━━━━━━━━━\n"
+        "\U0001F525 *YE BOT KYA KARTA HAI?*\n"
+        "Kisi ko bhi group mein spam kar sakta hai — messages, gaaliyan, roast, name change sab!\n"
+        "\n"
+        "━━━━━━━━━━━━━━━━━━━━━\n"
+        "\U0001F4CB *USE KARNE KE LIYE STEPS:*\n"
+        "\n"
+        "*STEP 1* — Owner se permission lo\n"
+        "\u279C @ruchika\_owns ko message karo\n"
+        "\n"
+        "*STEP 2* — Bot ko group mein add karo\n"
+        "\u279C Bot ko group mein add karo\n"
+        "\u279C Bot ko *ADMIN* banao\n"
+        "\u279C Admin mein *Change Group Info* ON karo\n"
+        "\n"
+        "*STEP 3* — Fight shuru karo\n"
+        "\u279C Group mein: `/fight @TargetName`\n"
+        "\u279C Bot bolega DM KAR — click karo\n"
+        "\u279C Private mein naam batao\n"
+        "\u279C Mode select karo aur spam shuru!\n"
+        "\n"
+        "*STEP 4* — Band karo\n"
+        "\u279C Group mein `/stop` likho\n"
+        "\n"
+        "━━━━━━━━━━━━━━━━━━━━━\n"
+        "\u26A0\uFE0F *5 fights free — uske baad dobara permission lo*\n"
+        "━━━━━━━━━━━━━━━━━━━━━\n"
+        "\U0001F480 *AB JA AUR KISI KO BARBAD KAR!* \U0001F480"
+    )
+
+    keyboard = [[InlineKeyboardButton(
+        "\U0001F511 PERMISSION LENE KE LIYE CLICK KARO",
+        url="https://t.me/ruchika_owns"
+    )]]
+    await update.message.reply_text(
+        welcome,
+        parse_mode="Markdown",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
+
 async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if update.effective_user.id != OWNER_ID:
         return
@@ -32,7 +89,20 @@ async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 break
     if user_id:
         allowed_users.add(user_id)
+        fight_count[user_id] = 0
         await update.message.reply_text(f"\u2705 {name} BKL AAGYA PERMISSION!")
+        try:
+            await context.bot.send_message(
+                chat_id=user_id,
+                text=(
+                    "\u2705 *PERMISSION MIL GAYI!*\n\n"
+                    "Ab group mein ja aur `/fight @target` likh!\n"
+                    "\U0001F525 5 fights free hain tere liye"
+                ),
+                parse_mode="Markdown"
+            )
+        except Exception:
+            pass
     else:
         await update.message.reply_text("\u274c GAWAR KISI KO MANTION TO KAR!!!")
 
@@ -76,18 +146,30 @@ async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     chat_id = update.effective_chat.id
-    is_private = update.effective_chat.type == "private"
+    chat_type = update.effective_chat.type
+    is_private = chat_type == "private"
 
-    if user_id != OWNER_ID and user_id not in allowed_users:
-        if fight_count.get(user_id, 0) >= MAX_FIGHTS:
-            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
-            return
-    elif user_id != OWNER_ID and user_id in allowed_users:
-        pass
-
-    if user_id != OWNER_ID and user_id not in allowed_users and fight_count.get(user_id, 0) >= MAX_FIGHTS:
-        await update.message.reply_text("\u26D4 NIKAL PERMISSION LEKE AA PAHLE @ruchika_owns")
+    # Private mein /fight — group mein add karne bol
+    if is_private:
+        bot_username = (await context.bot.get_me()).username
+        await update.message.reply_text(
+            "\u26A0\uFE0F *PEHLE BOT KO GROUP MEIN ADD KAR!*\n\n"
+            "1\uFE0F\u20E3 Apne group mein bot add karo\n"
+            "2\uFE0F\u20E3 Bot ko *Admin* banao\n"
+            "3\uFE0F\u20E3 Group mein ja aur `/fight @target` likh",
+            parse_mode="Markdown"
+        )
         return
+
+    # Permission check
+    if user_id != OWNER_ID and user_id not in allowed_users:
+        count = fight_count.get(user_id, 0)
+        if count >= MAX_FIGHTS:
+            await update.message.reply_text(
+                "\u26D4 *TERI 5 FIGHTS KHATAM!*\n\n@ruchika\_owns se dobara permission le",
+                parse_mode="Markdown"
+            )
+            return
 
     if user_id in active_fights:
         await update.message.reply_text("\u26A0\uFE0F PAHLE STOP TO KAR BKL!")
@@ -100,49 +182,44 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("\u274c Use: /fight @TargetName")
         return
 
-    if not is_private:
-        user_log[user_id] = chat_id
-        if user_id != OWNER_ID:
-            count = fight_count.get(user_id, 0)
-            if count >= MAX_FIGHTS:
-                allowed_users.discard(user_id)
-                fight_count.pop(user_id, None)
-                await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! PHIR SE PERMISSION LE @ruchika_owns")
-                return
-            fight_count[user_id] = count + 1
+    # Check bot admin hai ya nahi
+    try:
+        bot_member = await context.bot.get_chat_member(chat_id, context.bot.id)
+        is_admin = bot_member.status in ["administrator", "creator"]
+    except Exception:
+        is_admin = False
 
-        waiting_for_sender[user_id] = (target, chat_id, update.message.message_id)
-        bot_username = (await context.bot.get_me()).username
-        keyboard = [[InlineKeyboardButton(
-            "\U0001F4AC DM KARO — SETTING SET KARO",
-            url=f"https://t.me/{bot_username}?start=setup"
-        )]]
-        reply_markup = InlineKeyboardMarkup(keyboard)
+    if not is_admin:
         await update.message.reply_text(
-            f"\u26A0\uFE0F DM KAR BKL SETTING SET KAR PAHLE TARGET KA \U0001F447",
-            reply_markup=reply_markup
-        )
-        return
-
-    waiting_for_sender[user_id] = (target, chat_id, update.message.message_id)
-    await update.message.reply_text(
-        f"\u2694\uFE0F Target: *{target}*\n\nNAME BOL JALDI SE APNA:",
-        parse_mode="Markdown"
-    )
-
-async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    user_id = update.effective_user.id
-    is_private = update.effective_chat.type == "private"
-    if not is_private:
-        return
-    if user_id in waiting_for_sender:
-        target, group_chat_id, _ = waiting_for_sender[user_id]
-        await update.message.reply_text(
-            f"\u2694\uFE0F Target: *{target}*\n\nNAME BOL JALDI SE APNA:",
+            "\u26A0\uFE0F *BOT KO ADMIN BANAO!*\n\n"
+            "Mujhe admin bana de group ka tabhi kaam karunga \U0001F608\n\n"
+            "_Admin mein 'Change Group Info' permission ON karna mat bhulio_",
             parse_mode="Markdown"
         )
-    else:
-        await update.message.reply_text("Pehle group mein /fight @target likh ke aa!")
+        return
+
+    # Sab sahi hai — fight shuru
+    user_log[user_id] = chat_id
+    if user_id != OWNER_ID:
+        count = fight_count.get(user_id, 0)
+        if count >= MAX_FIGHTS:
+            await update.message.reply_text(
+                "\u26D4 *TERI 5 FIGHTS KHATAM!*\n\n@ruchika\_owns se dobara permission le",
+                parse_mode="Markdown"
+            )
+            return
+        fight_count[user_id] = count + 1
+
+    waiting_for_sender[user_id] = (target, chat_id, update.message.message_id)
+    bot_username = (await context.bot.get_me()).username
+    keyboard = [[InlineKeyboardButton(
+        "\U0001F4AC DM KARO — SETTING SET KARO",
+        url=f"https://t.me/{bot_username}?start=setup"
+    )]]
+    await update.message.reply_text(
+        "\u26A0\uFE0F DM KAR BKL SETTING SET KAR PAHLE \U0001F447",
+        reply_markup=InlineKeyboardMarkup(keyboard)
+    )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -173,7 +250,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if user_id not in waiting_for_sender:
-        await update.message.reply_text("Pehle group mein /fight @target likh ke aa!")
+        await update.message.reply_text(
+            "Pehle group mein `/fight @target` likh ke aa!",
+            parse_mode="Markdown"
+        )
         return
 
     sender = update.message.text.strip()
@@ -183,12 +263,11 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     keyboard = [
         [InlineKeyboardButton("1\uFE0F\u20E3 CHAT SPAM", callback_data=f"mainmenu_chat|{user_id}")],
         [InlineKeyboardButton("2\uFE0F\u20E3 NAME CHANGE SPAM", callback_data=f"mainmenu_name|{user_id}")],
-        [InlineKeyboardButton("3\uFE0F\u20E3 STICKERS", callback_data=f"mainmenu_sticker|{user_id}")],
+        [InlineKeyboardButton("3\uFE0F\u20E3 STICKERS \U0001F6A7", callback_data=f"mainmenu_sticker|{user_id}")],
     ]
-    reply_markup = InlineKeyboardMarkup(keyboard)
     await update.message.reply_text(
         f"\u2694\uFE0F *{sender}* vs *{target}*\n\nKYA KARNA HAI?",
-        reply_markup=reply_markup,
+        reply_markup=InlineKeyboardMarkup(keyboard),
         parse_mode="Markdown"
     )
 
@@ -207,15 +286,16 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if action == "mainmenu_chat":
         keyboard = [
-            [InlineKeyboardButton("1\uFE0F\u20E3 SHORT TEXT FIGHT", callback_data=f"short|{user_id}")],
-            [InlineKeyboardButton("2\uFE0F\u20E3 LONG TEXT FIGHT", callback_data=f"long|{user_id}")],
+            [InlineKeyboardButton("1\uFE0F\u20E3 SHORT TEXT", callback_data=f"short|{user_id}")],
+            [InlineKeyboardButton("2\uFE0F\u20E3 LONG TEXT", callback_data=f"long|{user_id}")],
             [InlineKeyboardButton("3\uFE0F\u20E3 KHUD DAL LE TEXT", callback_data=f"custom|{user_id}")],
-            [InlineKeyboardButton("4\uFE0F\u20E3 GAALI - FULL READY HU", callback_data=f"gaali|{user_id}")],
-            [InlineKeyboardButton("5\uFE0F\u20E3 ROAST - AAJA", callback_data=f"roast|{user_id}")],
+            [InlineKeyboardButton("4\uFE0F\u20E3 GAALI \U0001FA78", callback_data=f"gaali|{user_id}")],
+            [InlineKeyboardButton("5\uFE0F\u20E3 ROAST \U0001F525", callback_data=f"roast|{user_id}")],
         ]
         await query.edit_message_text(
-            "\U0001F4AC CHAT SPAM MODE\n\nKaunsa type chahiye?",
-            reply_markup=InlineKeyboardMarkup(keyboard)
+            "\U0001F4AC *CHAT SPAM MODE*\n\nKaunsa type chahiye?",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="Markdown"
         )
         return
 
@@ -225,18 +305,19 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             [InlineKeyboardButton("2\uFE0F\u20E3 KHUD DEGA NAMES", callback_data=f"namecustom|{user_id}")],
         ]
         await query.edit_message_text(
-            "\U0001F4DD NAME CHANGE MODE\n\nKaunsa type chahiye?",
-            reply_markup=InlineKeyboardMarkup(keyboard)
+            "\U0001F4DD *NAME CHANGE MODE*\n\nKaunsa type chahiye?",
+            reply_markup=InlineKeyboardMarkup(keyboard),
+            parse_mode="Markdown"
         )
         return
 
     if action == "mainmenu_sticker":
-        await query.edit_message_text("STICKERS ABHI COMING SOON! \U0001F6A7")
+        await query.edit_message_text("STICKERS COMING SOON! \U0001F6A7")
         return
 
     if action == "nameauto":
         active_fights[user_id] = True
-        await query.edit_message_text("\U0001F525 NAME CHANGE SHURU! /stop se band karo.")
+        await query.edit_message_text("\U0001F525 NAME CHANGE SHURU! Group mein `/stop` se band karo.")
         names = [
             f"{target} TERI MAA KA PEROID",
             f"{target} TERI MA KE NUDES KO VPS EDIT BANA DU?",
@@ -248,16 +329,19 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if action == "namecustom":
         waiting_for_custom_name[user_id] = (sender, target, group_chat_id)
-        await query.edit_message_text("\u270D\uFE0F NEW NAMES BHEJ JALDI JALDI")
+        await query.edit_message_text(
+            "\u270D\uFE0F *HAR LINE PE EK NAAM BHEJ:*\n\nExample:\nRAHUL PAGAL HAI\nRAHUL BHAAG",
+            parse_mode="Markdown"
+        )
         return
 
     if action == "custom":
         waiting_for_custom[user_id] = (sender, target, group_chat_id)
-        await query.edit_message_text("\u270D\uFE0F TEXT BHEJ JALDI JALDI:")
+        await query.edit_message_text("\u270D\uFE0F APNA TEXT BHEJ — WOH BAR BAR SPAM HOGA:")
         return
 
     active_fights[user_id] = True
-    await query.edit_message_text("\U0001F525 GROUP DEKH JAKE!")
+    await query.edit_message_text("\U0001F525 SPAM SHURU! Group mein `/stop` se band karo.")
     asyncio.create_task(run_fight(context, sender, target, user_id, action, group_chat_id))
 
 async def run_fight(context, sender, target, user_id, spam_type, group_chat_id):
