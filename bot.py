@@ -427,7 +427,7 @@ async def run_fight(context, sender, target, user_id, spam_type, group_chat_id):
             await context.bot.send_message(chat_id=group_chat_id, text=msg)
         except Exception:
             pass
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.01)
 
 async def run_name_change(context, names, user_id, group_chat_id):
     i = 0
@@ -445,7 +445,7 @@ async def run_custom_fight(context, custom_text, user_id, group_chat_id):
             await context.bot.send_message(chat_id=group_chat_id, text=custom_text)
         except Exception:
             pass
-        await asyncio.sleep(0.02)
+        await asyncio.sleep(0.01)
 
 async def unknown(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
