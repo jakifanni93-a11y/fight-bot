@@ -36,7 +36,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "4\uFE0F\u20E3 DM aayega — naam batao — spam shuru!\n"
         "5\uFE0F\u20E3 Band karne ke liye: `/stop`\n\n"
         "━━━━━━━━━━━━━━━━━━━\n"
-        "\u26A0\uFE0F 5 fights free — phir @ruchika\_owns se lo\n"
+        "\u26A0\uFE0F 5 fights free — phir @ruchika_owns se lo\n"
         "━━━━━━━━━━━━━━━━━━━",
         parse_mode="Markdown",
         reply_markup=InlineKeyboardMarkup([[
@@ -124,7 +124,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if user_id != OWNER_ID and user_id not in allowed_users:
         if fight_count.get(user_id, 0) >= MAX_FIGHTS:
-            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! @ruchika\_owns SE PERMISSION LE", parse_mode="Markdown")
+            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! @ruchika_owns SE PERMISSION LE",)
             return
 
     if user_id in active_fights:
@@ -151,7 +151,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if user_id != OWNER_ID:
         count = fight_count.get(user_id, 0)
         if count >= MAX_FIGHTS:
-            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! @ruchika\_owns SE PERMISSION LE", parse_mode="Markdown")
+            await update.message.reply_text("\u26D4 TERI 5 FIGHTS KHATAM! @ruchika_owns SE PERMISSION LE")
             return
         fight_count[user_id] = count + 1
 
