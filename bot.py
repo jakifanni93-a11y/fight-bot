@@ -23,7 +23,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         target, group_chat_id, _ = waiting_for_sender[user_id]
         await update.message.reply_text(
             f"\u2694\uFE0F Target: *{target}*\n\nApna naam bhej:",
-            parse_mode="Markdown"
+            
         )
         return
     await update.message.reply_text(
@@ -38,7 +38,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "━━━━━━━━━━━━━━━━━━━\n"
         "\u26A0\uFE0F 5 fights free — phir @ruchika_owns se lo\n"
         "━━━━━━━━━━━━━━━━━━━",
-        parse_mode="Markdown",
+        
         reply_markup=InlineKeyboardMarkup([[
             InlineKeyboardButton("\U0001F511 PERMISSION LO", url="https://t.me/ruchika_owns")
         ]])
@@ -66,7 +66,7 @@ async def allow(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await context.bot.send_message(
                 chat_id=user_id,
                 text="\u2705 *PERMISSION MIL GAYI!*\n\nGroup mein ja aur `/fight @target` likh!\n\U0001F525 5 fights free",
-                parse_mode="Markdown"
+                
             )
         except Exception:
             pass
@@ -102,7 +102,7 @@ async def logs(update: Update, context: ContextTypes.DEFAULT_TYPE):
     msg = "\U0001F4CB *USERS:*\n\n"
     for uid, cid in user_log.items():
         msg += f"User: `{uid}` | Chat: `{cid}`\n"
-    await update.message.reply_text(msg, parse_mode="Markdown")
+    await update.message.reply_text(msg, )
 
 async def stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
@@ -118,7 +118,7 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if is_private:
         await update.message.reply_text(
             "\u26A0\uFE0F *PEHLE BOT KO GROUP MEIN ADD KAR!*",
-            parse_mode="Markdown"
+           
         )
         return
 
@@ -141,10 +141,10 @@ async def fight(update: Update, context: ContextTypes.DEFAULT_TYPE):
     try:
         bot_member = await context.bot.get_chat_member(chat_id, context.bot.id)
         if bot_member.status not in ["administrator", "creator"]:
-            await update.message.reply_text("\u26A0\uFE0F *MUJHE ADMIN BANAO PEHLE!*", parse_mode="Markdown")
+            await update.message.reply_text("\u26A0\uFE0F *MUJHE ADMIN BANAO PEHLE!*")
             return
     except Exception:
-        await update.message.reply_text("\u26A0\uFE0F *MUJHE ADMIN BANAO PEHLE!*", parse_mode="Markdown")
+        await update.message.reply_text("\u26A0\uFE0F *MUJHE ADMIN BANAO PEHLE!*")
         return
 
     user_log[user_id] = chat_id
@@ -180,7 +180,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if user_id not in waiting_for_sender:
-        await update.message.reply_text("Pehle group mein `/fight @target` likh!", parse_mode="Markdown")
+        await update.message.reply_text("Pehle group mein `/fight @target` likh!")
         return
 
     sender = update.message.text.strip()
